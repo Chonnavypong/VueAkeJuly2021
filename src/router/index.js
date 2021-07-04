@@ -3,6 +3,7 @@ import Home from "../views/Home.vue";
 import About from "../views/About.vue"
 import Product from "../views/Product.vue"
 import DashBoard from "../layouts/DashBoard.vue";
+import categoryRoutes from "../views/category/category-route";
 
 const routes = [
   {
@@ -25,6 +26,7 @@ const routes = [
         name: "Product",
         component: Product,
       },
+      ...categoryRoutes // ES6 spread 
     ],
   },
   {
