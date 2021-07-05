@@ -32,16 +32,27 @@
           </router-link>
         </div>
       </div>
-      <div class="sb-sidenav-footer">
-        <div class="small">Logged in as:</div>
-        Start Bootstrap
+      <div class="sb-sidenav-footer" v-if="profile">
+        <div class="small">Logged in as: {{ profile?.name }}</div>
+        Email : {{ profile?.email }}
       </div>
     </nav>
   </div>
 </template>
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
+
 export default {
   name: "SideNav",
+  setup() {
+    const store = useStore();
+    const profile = computed(() => store.state.profile); // เลือก state profile
+
+    return {
+      profile,
+    };
+  },
 };
 </script>

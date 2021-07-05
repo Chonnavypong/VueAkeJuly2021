@@ -17,13 +17,27 @@
 </template>
 
 <script>
-import { useAdd } from "./use/crud-category"; // สร้างเป็น composition api ใน use folder
+import { ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
+import { BASE_API_URL } from "../../constants";
 
 export default {
   name: "CategoryAdd",
 
   setup() {
-    const { name, onSubmit } = useAdd(); // destructuring assignment
+    const name = ref("");
+    const router = useRouter();
+
+    const onSubmit = async () => {
+      const response = await axios.post(`${BASE_API_URL}/api/category`, {
+        name: name.value,
+      });
+      // alert(response.data.message);
+      Swal.fire(response.data.message, "ผลการทำงาน", "success");
+      router.replace({ name: "CategoryIndex" });
+    };
 
     return { name, onSubmit };
   },

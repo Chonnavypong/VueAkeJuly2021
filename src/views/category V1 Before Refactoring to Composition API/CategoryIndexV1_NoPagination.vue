@@ -5,9 +5,10 @@
         <h1>ประเภทสินค้า</h1>
 
         <!--- เพิ่มข้อมูลสินค้า -->>
-        <router-link :to="{ name: 'CategoryAdd' }" class="btn btn-primary">
-          เพิ่มประเภทสินค้า
-        </router-link>
+        <router-link
+          :to="{ CategoryAdd }"
+          class="btn btn-primary"
+        ></router-link>
 
         <div v-if="errorMessage" class="alert alert-danger" role="alert">
           {{ errorMessage }}
@@ -39,7 +40,6 @@
                   แก้ไข
                 </router-link>
                 |
-
                 <a href="#" @click.prevent="deleteCategoryById(item.id)">
                   ลบ
                 </a>
@@ -47,51 +47,61 @@
             </tr>
           </tbody>
         </table>
-        <br />
-
-        <div v-if="categories.length">
-          <v-pagination
-            v-model="page"
-            :pages="totalPage"
-            :range-size="1"
-            active-color="#DCEDFF"
-            @update:modelValue="getData"
-          />
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useIndex } from "./use/crud-category";
-import VPagination from "@hennge/vue3-pagination";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { BASE_API_URL } from "../../constants";
+import Swal from "sweetalert2";
 
 export default {
-  name: "CategoryIndex",
-  components: {
-    VPagination,
-  },
+  name: "CategoryIndexV1",
   setup() {
-    const {
-      categories,
-      errorMessage,
-      loading,
-      deleteCategoryById,
-      page,
-      totalPage,
-      getData,
-    } = useIndex();
+    const categories = ref([]); // ข้อมุลใน API เป็น array
+    const errorMessage = ref("");
+    const loading = ref(false);
 
-    return {
-      categories,
-      errorMessage,
-      loading,
-      deleteCategoryById,
-      page,
-      totalPage,
-      getData,
+    const getData = async () => {
+      // Case 1 ใช้ if else และ try... catch...กรณี server (4xx, 5xx) มีปัญหา หรือติดต่อได้ 200 OK
+      try {
+        // 2xx
+        loading.value = true;
+        const response = await axios.get(`${BASE_API_URL}/api/category`);
+
+        categories.value = response.data; //[{}] จาก api
+
+        console.log(categories.value);
+      } catch (error) {
+        // 400, 500
+        // console.log(error.response.data)
+        errorMessage.value = "เกิดข้อผิดพลาด กรุณาลองใหม่";
+      } finally {
+        loading.value = false;
+      }
     };
+
+    onMounted(() => {
+      getData();
+    });
+
+    const deleteCategoryById = async (id) => {
+      const isConfirm = window.confirm("แน่ใจว่าต้องการลบข้อมูลนี้");
+
+      if (isConfirm === true) {
+        const response = await axios.delete(
+          `${BASE_API_URL}/api/category/${id}`
+        );
+
+        Swal.fire(response.data.message, "ผลการทำงาน", "success");
+        history.go(0);
+      }
+    };
+
+    return { categories, errorMessage, loading, deleteCategoryById };
   },
 };
 </script>

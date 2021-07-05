@@ -10,13 +10,14 @@
                   <h3 class="text-center font-weight-light my-4">Login</h3>
                 </div>
                 <div class="card-body">
-                  <form>
+                  <form @submit.prevent="onSubmit">
                     <div class="form-floating mb-3">
                       <input
                         class="form-control"
                         id="inputEmail"
                         type="email"
                         placeholder="name@example.com"
+                        v-model="email"
                       />
                       <label for="inputEmail">Email address</label>
                     </div>
@@ -26,6 +27,7 @@
                         id="inputPassword"
                         type="password"
                         placeholder="Password"
+                        v-model="password"
                       />
                       <label for="inputPassword">Password</label>
                     </div>
@@ -52,7 +54,9 @@
                       "
                     >
                       <a class="small" href="password.html">Forgot Password?</a>
-                      <a class="btn btn-primary" href="index.html">Login</a>
+                      <button class="btn btn-primary" type="submit">
+                        Login
+                      </button>
                     </div>
                   </form>
                 </div>
@@ -85,7 +89,41 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+import { BASE_API_URL } from "../constants";
+import { useStore } from "vuex";
+
 export default {
   name: "Login",
+
+  setup() {
+    const email = ref("");
+    const password = ref("");
+    const router = useRouter();
+    const store = useStore();
+
+    const onSubmit = async () => {
+      try {
+        const response = await axios.post(`${BASE_API_URL}/api/login`, {
+          email: email.value,
+          password: password.value,
+        });
+
+        // console.log(response.data);
+        // เก็บ token ลงใน local storage ตอนเก็บเป็น string ตอนเรียกใช้งาน แปลงกลับไป โดยใช้ parse
+        localStorage.setItem("token", JSON.stringify(response.data));
+        // call action vuex
+        store.dispatch("getProfile"); // getProfile จาก actions ใน store/index.js
+
+        router.replace("/");
+      } catch (error) {
+        alert(JSON.stringify(error.response.data)); // axios error
+      }
+    };
+
+    return { email, password, onSubmit };
+  },
 };
 </script>

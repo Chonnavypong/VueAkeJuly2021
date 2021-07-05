@@ -10,4 +10,7 @@ import "bootstrap/dist/js/bootstrap.bundle.js" // bootstrap 5 js ( bootstrap + P
 import "startbootstrap-sb-admin/dist/css/styles.css" // รวม Bootstrap 5 มาแล้ว
 import "startbootstrap-sb-admin/dist/js/scripts.js"
 
+//pagination css
+import "@hennge/vue3-pagination/dist/vue3-pagination.css"
+
 createApp(App).use(store).use(router).mount("#app");

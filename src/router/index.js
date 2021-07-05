@@ -10,6 +10,7 @@ const routes = [
     path: "/",
     name: "DashBoard",
     component: DashBoard,
+    meta: { requireAuth: true },
     children: [
       {
         path: "",
@@ -45,5 +46,23 @@ const router = createRouter({
   routes,
   linkExactActiveClass: "active" // active menu ที่เรากด linkExactActiveClass เป็นของ Vue และ class active ของ bootstrap หากเราทำเอง ก็เอา ชื่อ class ที่แสดง active มาแทน
 });
+
+router.beforeEach((to, from, next) => {
+  // check ว่ามี route ไหนบ้างที่ต้องการ token ( requireAuth )
+  if(to.matched.some((record) => record.meta.requireAuth)){
+    
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+      // หน้าไหนต้องการ requireAuth ให้ไปที่ login ก่อน
+      next("/login");
+    } else {
+      next()
+    }
+  } else {
+    // หน้าไหนไม่มี requrieAuth ให้เข้าได้เลย
+    next()
+  }
+})
 
 export default router;

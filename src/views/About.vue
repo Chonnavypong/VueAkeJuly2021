@@ -7,6 +7,15 @@
     <button class="btn btn-info" @click="greet">Click Me</button>
     <br />
     <Logo />
+
+    <div>
+      <h1>ตัวอย่าง Upload File</h1>
+      <form @submit.prevent="onSubmit" enctype="multipart/form-data">
+        <!-- ref ตัวนี้ เป็นของ input ตัวนี้ -->
+        <input type="file" name="picture" ref="file" />
+        <button type="submit">Upload</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -31,10 +40,10 @@ export default {
     });
     const isShow = ref(false);
     onMounted(() => {
-      alert("Hello About Page");
+      // alert("Hello About Page");
     });
     onUnmounted(() => {
-      alert("Bye About page");
+      // alert("Bye About page");
     });
     const greet = () => {
       // alert("Hello Vue3");
@@ -42,7 +51,21 @@ export default {
 
       isShow.value = !isShow.value;
     };
-    return { email, googleUrl, imgUrl, isShow, greet }; // ต้อง return ไปให้ template นำไปแสดง
+    
+    const file = ref(null);
+
+    const onSubmit = () => {
+      console.log(file.value.files[0]);
+      const fileUpload = file.value.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(fileUpload);
+      reader.onload = (e) => {
+        const base64Image = e.target.result;
+        console.log(base64Image);
+        // ให้ส่ง base64Image ไป อัปโหลดที่ server
+      };
+    };
+    return { email, googleUrl, imgUrl, isShow, greet, onSubmit, file }; // ต้อง return ไปให้ template นำไปแสดง
   },
 };
 </script>
