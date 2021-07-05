@@ -3,7 +3,8 @@
   <div id="layoutSidenav">
     <SideNav />
     <div id="layoutSidenav_content">
-      <main>    <!-- ช่องเจาะไว้เอา component มาใส่ ตัวนี้เป็นลูกของ Root // ใน App.vue
+      <main>
+        <!-- ช่องเจาะไว้เอา component มาใส่ ตัวนี้เป็นลูกของ Root // ใน App.vue
         อยู่คนละระดับถือว่าไม่ซ้ำ แต่หาก อยู่ในระดับเดียวกัน // ถือว่าซ้ำ
         ต้องตั้งชื้อให้มันด้วย -->
         <router-view />
@@ -28,6 +29,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
-
+<style></style>

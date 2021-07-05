@@ -51,7 +51,7 @@ export default {
 
       isShow.value = !isShow.value;
     };
-    
+
     const file = ref(null);
 
     const onSubmit = () => {

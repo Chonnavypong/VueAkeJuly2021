@@ -23,7 +23,7 @@ const categoryRoutes = [
         component: CategoryAdd,
       },
       {
-        path: ":id/edit", // route parameter :id ต้องมี : 
+        path: ":id/edit", // route parameter :id ต้องมี :
         name: "CategoryEdit",
         component: CategoryEdit,
       },
